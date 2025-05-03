@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from urllib.parse import urlparse
 import time
 
 class SelenScrap:
@@ -30,29 +31,39 @@ class SelenScrap:
 
         try:
             search_results = WebDriverWait(driver, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "h3"))
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "h2"))
             )
 
             search_results[0].click()
+            
+            # blacklist = ["wikipedia.org", "britannica.com", "wiktionary.org"]
+            # target_url = None
 
+            # for link in search_results:
+            #     url = link.get_attribute("href")
+            #     domain = urlparse(url).netloc.lower()
+
+            #     if not any(bad in domain for bad in blacklist):
+            #         target_url = url
+            #         break
         except:
             driver.quit()
 
         time.sleep(3)
 
-        about_links = driver.find_element(By.PARTIAL_LINK_TEXT, "About")
+        # about_links = driver.find_element(By.PARTIAL_LINK_TEXT, "About")
 
-        if about_links:
-            time.sleep(3)
-            about_links[0].click()
-        else:
-            driver.quit()
+        # if about_links:
+        #     about_links[0].click()
+        # else:
+        #     driver.quit()
 
         try:
-            time.sleep(3)
-            content = driver.find_element(By.TAG_NAME, "body").text
+            title = driver.find_element(By.ID, "firstHeading").text
+            content = driver.find_element(By.ID, "mw-content-text").text
 
-            print(content[:1500])
+            self.title = title
+            self.text = content
         except:
             driver.quit()
 

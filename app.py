@@ -1,21 +1,39 @@
 from Scrappers.beautifulsoup import BeautyScrap
 from Scrappers.selenium import SelenScrap
 
-# selenScrap = SelenScrap("muslim world league")
+from ollama import chat
+from ollama import ChatResponse
 
-def output(title, text):
-    print(title)
-    print(text)
+def ollama(prompt):
+    response: ChatResponse = chat(model='llama3.2', messages=[
+                            {
+                                'role': 'user',
+                                'content': prompt
+                            },
+                        ])
 
-scrapper = input("Enter 1 For Beautiful Soup and 2 For Selenium.")
+    print(response.message.content)
 
-if scrapper == 1:
-    url = input("Enter the URL: ")
-    
+def getPrompt(title, content):
+    return f"""You're an assistant. Summarize the content shortly with keypoints. 
+            Title: {title}
+            Content: {content}"""
+
+
+scrapper = input("Enter 1 or 2: ")
+
+if scrapper == "1":
+    url = input("Enter the URL: ")    
     beautifulScrapper = BeautyScrap(url)
-    output(beautifulScrapper.title, beautifulScrapper.text)
+    
+    ollama(
+        getPrompt(beautifulScrapper.title, beautifulScrapper.text)
+    )
 
-elif scrapper == 2:
+elif scrapper == "2":
     query = input("Enter keywords to search website.")
     selenScrap = SelenScrap(query)
-    output(selenScrap.title, selenScrap.text)
+    
+    ollama(
+        getPrompt(selenScrap.title, selenScrap.text)
+    )
