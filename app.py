@@ -1,27 +1,21 @@
-import sys
-import requests
-from bs4 import BeautifulSoup
+from Scrappers.beautifulsoup import BeautyScrap
+from Scrappers.selenium import SelenScrap
 
-url = "https://en.wikipedia.org/wiki/Muslim_World_League"
+# selenScrap = SelenScrap("muslim world league")
 
-response = requests.get(url)
+def output(title, text):
+    print(title)
+    print(text)
 
-if response.status_code == 200:
+scrapper = input("Enter 1 For Beautiful Soup and 2 For Selenium.")
 
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-    title = soup.title.string
-
-    print(f"Page Title: {title}")
+if scrapper == 1:
+    url = input("Enter the URL: ")
     
-    introductions  = soup.find_all('p')
-    
-    for intro in introductions[:5]:
-        print(f"Introduction: {intro.text}")
-        
+    beautifulScrapper = BeautyScrap(url)
+    output(beautifulScrapper.title, beautifulScrapper.text)
 
-
-
-# sys.exit()
-
-print("Hello World")
+elif scrapper == 2:
+    query = input("Enter keywords to search website.")
+    selenScrap = SelenScrap(query)
+    output(selenScrap.title, selenScrap.text)
